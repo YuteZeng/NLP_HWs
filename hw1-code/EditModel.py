@@ -64,7 +64,7 @@ class EditModel(object):
     # Tip: you might find EditModel.ALPHABET helpful
     # Tip: If inserting the letter 'a' as the second character in the word 'test', the corrupt
     #      signal is 't' and the correct signal is 'ta'. 
-    if len(words) <= 0:
+    if len(word) <= 0:
       return []
     word = "<" + word # append start token
     ret = []
@@ -92,14 +92,17 @@ class EditModel(object):
     word = "<" + word #Append start character
     ret = []
     for i in range(1, len(word)-1):
-      #The corrupted signal are this character and the character acceding
-      corruptLetters = word[i:i+2] 
-      #The correct signal is the transposed characters
-      correctLetters = word[i+1:i-1:-1]
+      if word[i] == word[i+1]:
+        continue
+      else:
+        #The corrupted signal are this character and the character acceding
+        corruptLetters = word[i:i+2] 
+        #The correct signal is the transposed characters
+        correctLetters = word[i+1:i-1:-1]
 
-      #The corrected word deletes character i (and lacks the start symbol)
-      correction = "%s%s%s" % (word[1:i], correctLetters, word[i+2:])
-      ret.append(Edit(correction, corruptLetters, correctLetters))
+        #The corrected word deletes character i (and lacks the start symbol)
+        correction = "%s%s%s" % (word[1:i], correctLetters, word[i+2:])
+        ret.append(Edit(correction, corruptLetters, correctLetters))
       
     return ret
 
@@ -109,7 +112,21 @@ class EditModel(object):
     # Tip: you might find EditModel.ALPHABET helpful
     # Tip: If replacing the letter 'e' with 'q' in the word 'test', the corrupt signal is 'e'
     #      and the correct signal is 'q'.
-    return []
+    if len(word) <= 0:
+      return []
+    
+    word = "<" + word
+    ret = []
+    for i in range(1, len(word)):
+      corruptLetters = word[i]
+      for alpha in EditModel.ALPHABET:
+        if word[i] == alpha:
+          continue
+        else:
+          correctLetters = alpha
+          correction = "%s%s%s" % (word[1:i], alpha, word[i+1:])
+          ret.append(Edit(correction, corruptLetters, correctLetters))
+    return ret
 
   def edits(self, word):
     """Returns a list of tuples of 1-edit distance words and rules used to generate them, e.g. ("test", "te|et")"""
