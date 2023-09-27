@@ -64,15 +64,44 @@ class EditModel(object):
     # Tip: you might find EditModel.ALPHABET helpful
     # Tip: If inserting the letter 'a' as the second character in the word 'test', the corrupt
     #      signal is 't' and the correct signal is 'ta'. 
+    if len(words) <= 0:
+      return []
     word = "<" + word # append start token
-    return []
+    ret = []
+    # there are len(word) + 1 insertion possible
+    for i in range(0, len(word)):
+      corruptLetters = word[i]
+      # add one alpha in the alphabet one at a time
+      for alpha in EditModel.ALPHABET:
+        correctLetters = corruptLetters + alpha
+        correction = "%s%s%s" % (word[1:i+1], alpha, word[i+1:])
+        ret.append(Edit(correction, corruptLetters, correctLetters))
+
+    return ret
 
   def transposeEdits(self, word):
     """Returns a list of edits of 1-transpose distance words and rules used to generate them."""
     # TODO: write this
     # Tip: If tranposing letters 'te' in the word 'test', the corrupt signal is 'te'
     #      and the correct signal is 'et'. 
-    return []
+    if len(word) <= 0:
+      return []
+    
+    if len(word) == 1:
+      return []
+    word = "<" + word #Append start character
+    ret = []
+    for i in range(1, len(word)-1):
+      #The corrupted signal are this character and the character acceding
+      corruptLetters = word[i:i+2] 
+      #The correct signal is the transposed characters
+      correctLetters = word[i+1:i-1:-1]
+
+      #The corrected word deletes character i (and lacks the start symbol)
+      correction = "%s%s%s" % (word[1:i], correctLetters, word[i+2:])
+      ret.append(Edit(correction, corruptLetters, correctLetters))
+      
+    return ret
 
   def replaceEdits(self, word):
     """Returns a list of edits of 1-replace distance words and rules used to generate them."""
