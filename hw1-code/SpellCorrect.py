@@ -29,14 +29,35 @@ class SpellCorrect:
 
     bestSentence = sentence[:] #copy of sentence
     bestScore = float('-inf')
-    
+    #print('sentence score', self.languageModel.score('Good day.'))
+    #print(sentence)
+    wordList = []
+    # getting all the word edits
     for i in range(1, len(sentence) - 1): #ignore <s> and </s>
       # TODO: select the maximum probability sentence here, according to the noisy channel model.
       # Tip: self.editModel.editProbabilities(word) gives edits and log-probabilities according to your edit model.
       #      You should iterate through these values instead of enumerating all edits.
       # Tip: self.languageModel.score(trialSentence) gives log-probability of a sentence
-      pass
+      # EditModel.editProbabilities(editModel,'me') -> [('m', -1.7832848422370828), ('men', -1.1420974006078484), ('met', -1.9480400753131382), ('be', -4.543294782270004), ('we', -5.054120406035994), ('mr', -3.667826044916104), ('my', -1.1157800922904753)]
+      # self.languageModel.score('Good day.') -> -37.68
+      word = [edits for edits in self.editModel.editProbabilities(sentence[i])]
+      wordList.append(word)
+    print()
+    print(sentence)
+    # use word list to generate all possible sentences
+    sentenceList = []  
+    for i in range(1, len(sentence) - 1):
+      if wordList[i-1]:
+        for change in wordList[i-1]:
+          newsentence = sentence[:]
+          newsentence[i] = change[0]
+          newsentence_score = self.languageModel.score(newsentence) + change[1]
+          sentenceList.append((newsentence, newsentence_score))
+    #print(sentenceList[0:4])
+    # select the most probable sentence
+    bestSentence, bestScore = max(sentenceList, key=lambda x: x[1])
 
+    print(bestSentence, bestScore)
     return bestSentence
 
   def evaluate(self, corpus):  
@@ -81,7 +102,7 @@ def main():
   unigramSpell = SpellCorrect(unigramLM, trainingCorpus)
   unigramOutcome = unigramSpell.evaluate(devCorpus)
   print(str(unigramOutcome))
-
+'''
   print('Uniform Language Model: ')
   uniformLM = UniformModel(trainingCorpus)
   uniformSpell = SpellCorrect(uniformLM, trainingCorpus)
@@ -111,6 +132,6 @@ def main():
   customSpell = SpellCorrect(customLM, trainingCorpus)
   customOutcome = customSpell.evaluate(devCorpus)
   print(str(customOutcome))
-
+'''
 if __name__ == "__main__":
     main()

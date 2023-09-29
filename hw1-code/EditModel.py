@@ -194,3 +194,7 @@ def main():
 
 if __name__ == "__main__":
   main()
+  trainPath = 'data/tagged-train.dat'
+  trainingCorpus = Corpus(trainPath)
+  editModel = EditModel("data/count_1edit.txt", trainingCorpus)
+  print(EditModel.editProbabilities(editModel,'me')[0][0])
