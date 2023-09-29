@@ -42,8 +42,8 @@ class SpellCorrect:
       # self.languageModel.score('Good day.') -> -37.68
       word = [edits for edits in self.editModel.editProbabilities(sentence[i])]
       wordList.append(word)
-    print()
-    print(sentence)
+    #print()
+    #print(sentence)
     # use word list to generate all possible sentences
     sentenceList = []  
     for i in range(1, len(sentence) - 1):
@@ -57,7 +57,7 @@ class SpellCorrect:
     # select the most probable sentence
     bestSentence, bestScore = max(sentenceList, key=lambda x: x[1])
 
-    print(bestSentence, bestScore)
+    #print(bestSentence, bestScore)
     return bestSentence
 
   def evaluate(self, corpus):  
@@ -96,42 +96,42 @@ def main():
 
   devPath = 'data/tagged-dev.dat'
   devCorpus = Corpus(devPath)
-
+  
   print('Unigram Language Model: ') 
   unigramLM = UnigramModel(trainingCorpus)
   unigramSpell = SpellCorrect(unigramLM, trainingCorpus)
   unigramOutcome = unigramSpell.evaluate(devCorpus)
   print(str(unigramOutcome))
-'''
+  '''
   print('Uniform Language Model: ')
   uniformLM = UniformModel(trainingCorpus)
   uniformSpell = SpellCorrect(uniformLM, trainingCorpus)
   uniformOutcome = uniformSpell.evaluate(devCorpus) 
   print(str(uniformOutcome))
-
+  
   print('Smooth Unigram Language Model: ') 
   smoothUnigramLM = SmoothUnigramModel(trainingCorpus)
   smoothUnigramSpell = SpellCorrect(smoothUnigramLM, trainingCorpus)
   smoothUnigramOutcome = smoothUnigramSpell.evaluate(devCorpus)
   print(str(smoothUnigramOutcome))
-
+  
   print('Smooth Bigram Language Model: ')
   smoothBigramLM = SmoothBigramModel(trainingCorpus)
   smoothBigramSpell = SpellCorrect(smoothBigramLM, trainingCorpus)
   smoothBigramOutcome = smoothBigramSpell.evaluate(devCorpus)
   print(str(smoothBigramOutcome))
-
+  
   print('Backoff Language Model: ')
   backoffLM = BackoffModel(trainingCorpus)
   backoffSpell = SpellCorrect(backoffLM, trainingCorpus)
   backoffOutcome = backoffSpell.evaluate(devCorpus)
   print(str(backoffOutcome))
-
+  '''
   print('Custom Language Model: ')
   customLM = CustomModel(trainingCorpus)
   customSpell = SpellCorrect(customLM, trainingCorpus)
   customOutcome = customSpell.evaluate(devCorpus)
   print(str(customOutcome))
-'''
+  
 if __name__ == "__main__":
     main()
