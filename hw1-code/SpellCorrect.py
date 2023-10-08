@@ -102,7 +102,7 @@ def main():
   unigramSpell = SpellCorrect(unigramLM, trainingCorpus)
   unigramOutcome = unigramSpell.evaluate(devCorpus)
   print(str(unigramOutcome))
-  '''
+  
   print('Uniform Language Model: ')
   uniformLM = UniformModel(trainingCorpus)
   uniformSpell = SpellCorrect(uniformLM, trainingCorpus)
@@ -126,6 +126,15 @@ def main():
   backoffSpell = SpellCorrect(backoffLM, trainingCorpus)
   backoffOutcome = backoffSpell.evaluate(devCorpus)
   print(str(backoffOutcome))
+  
+  # finding the most effective delta
+  '''
+  for delta in range(1,10):
+    print('Custom Language Model with delta =', 0.19+0.06*delta/10)
+    customLM = CustomModel(trainingCorpus, 0.19+0.06*delta/10)
+    customSpell = SpellCorrect(customLM, trainingCorpus)
+    customOutcome = customSpell.evaluate(devCorpus)
+    print(str(customOutcome))
   '''
   print('Custom Language Model: ')
   customLM = CustomModel(trainingCorpus)
