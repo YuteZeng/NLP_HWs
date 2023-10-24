@@ -5,7 +5,7 @@ Here's a toy example to check that things work.
 Train a bigram HMM tagger from sections 2-21 of the Penn Treebank:
 
   # Python:
-  python train_hmm.py data/ptb.2-21.tgs ptb.2-21.txt > my.hmm
+  python train_hmm.py data/ptb.2-21.tgs data/ptb.2-21.txt > my.hmm
 
 Run the Viterbi algorithm to tag some data:
 
