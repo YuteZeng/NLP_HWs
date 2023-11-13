@@ -35,7 +35,7 @@ transitions = {}
 transitionsTotal = defaultdict(int)
 emissionsTotal = defaultdict(int)
 
-with open(TAG_FILE) as tagFile, open(TOKEN_FILE) as tokenFile:
+with open(TAG_FILE,  encoding='utf-8') as tagFile, open(TOKEN_FILE,  encoding='utf-8') as tokenFile:
     for tagString, tokenString in zip(tagFile, tokenFile):
 
         tags = re.split("\s+", tagString.rstrip())
@@ -79,9 +79,9 @@ with open(TAG_FILE) as tagFile, open(TOKEN_FILE) as tokenFile:
 
 for prevtag in transitions:
     for tag in transitions[prevtag]:
-        print(("trans %s %s %s" % (prevtag, tag, float(transitions[prevtag][tag]) / transitionsTotal[prevtag])))
+        print(("trans %s %s %s" % (prevtag, tag, float(transitions[prevtag][tag]) / transitionsTotal[prevtag])).encode('utf-8').decode(sys.stdout.encoding))
 
 for tag in emissions:
     for token in emissions[tag]:
-        print(("emit %s %s %s " % (tag, token, float(emissions[tag][token]) / emissionsTotal[tag])))
+        print(("emit %s %s %s " % (tag, token, float(emissions[tag][token]) / emissionsTotal[tag])).encode('utf-8').decode(sys.stdout.encoding))
 
